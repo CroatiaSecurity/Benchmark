@@ -1,40 +1,41 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace GorstakBenchmark;
-
-static class Program
+namespace GorstakBenchmark
 {
-    [STAThread]
-    static void Main()
+    static class Program
     {
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-
-        Application.ThreadException += (s, e) =>
+        [STAThread]
+        static void Main()
         {
-            try { MessageBox.Show(e.Exception.ToString(), "Gorstak Benchmark - Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            catch { }
-        };
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-        {
+            Application.ThreadException += (s, e) =>
+            {
+                try { MessageBox.Show(e.Exception.ToString(), "Gorstak Benchmark - Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                catch { }
+            };
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                try
+                {
+                    var ex = e.ExceptionObject as Exception;
+                    MessageBox.Show(ex != null ? ex.ToString() : e.ExceptionObject.ToString(),
+                        "Gorstak Benchmark - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch { }
+            };
+
             try
             {
-                var ex = e.ExceptionObject as Exception;
-                MessageBox.Show(ex?.ToString() ?? e.ExceptionObject.ToString(),
-                    "Gorstak Benchmark - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Run(new MainForm());
             }
-            catch { }
-        };
-
-        try
-        {
-            Application.Run(new MainForm());
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.ToString(), "Gorstak Benchmark - Startup Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Gorstak Benchmark - Startup Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
