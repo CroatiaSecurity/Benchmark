@@ -32,8 +32,8 @@ namespace GorstakBenchmark
         private bool _isRunning;
         private bool _closeRequested;
 
-        private const int Pad = 16;
-        private const int Gap = 12;
+        private const int Pad = 12;
+        private const int Gap = 8;
         private const int ContentWidth = 520;
 
         // Dark theme colors
@@ -64,8 +64,8 @@ namespace GorstakBenchmark
         private void InitializeComponent()
         {
             Text = "Gorstak Benchmark v0.4.0";
-            Size = new Size(600, 780);
-            MinimumSize = new Size(580, 600);
+            Size = new Size(600, 720);
+            MinimumSize = new Size(580, 500);
             try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.Sizable;
@@ -184,7 +184,7 @@ namespace GorstakBenchmark
             y += 100 + Gap;
 
             // === Chart card ===
-            var pnlChartCard = CreateCard(_pnlContent, Pad, y, ContentWidth, 190);
+            var pnlChartCard = CreateCard(_pnlContent, Pad, y, ContentWidth, 150);
             var lblChartTitle = new Label
             {
                 Text = "Performance breakdown",
@@ -196,30 +196,30 @@ namespace GorstakBenchmark
             pnlChartCard.Controls.Add(lblChartTitle);
             _pnlChart = new Panel
             {
-                Location = new Point(12, 28),
-                Size = new Size(496, 154),
+                Location = new Point(12, 26),
+                Size = new Size(496, 118),
                 BackColor = Color.FromArgb(18, 20, 30),
                 BorderStyle = BorderStyle.None
             };
             _pnlChart.Paint += PnlChart_Paint;
             pnlChartCard.Controls.Add(_pnlChart);
-            y += 190 + Gap;
+            y += 150 + Gap;
 
             // === Scores card ===
-            var pnlScoresCard = CreateCard(_pnlContent, Pad, y, ContentWidth, 120);
+            var pnlScoresCard = CreateCard(_pnlContent, Pad, y, ContentWidth, 104);
             var lblScoresTitle = new Label
             {
                 Text = "Component scores",
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = TextPrimary,
-                Location = new Point(12, 8),
+                Location = new Point(12, 6),
                 AutoSize = true
             };
             pnlScoresCard.Controls.Add(lblScoresTitle);
             _lstScores = new ListBox
             {
-                Location = new Point(12, 28),
-                Size = new Size(496, 84),
+                Location = new Point(12, 24),
+                Size = new Size(496, 74),
                 BackColor = CardBg,
                 ForeColor = TextPrimary,
                 BorderStyle = BorderStyle.None,
@@ -231,16 +231,16 @@ namespace GorstakBenchmark
             _lstScores.Items.Add("Disk     \u2014");
             _lstScores.Items.Add("Network  \u2014");
             pnlScoresCard.Controls.Add(_lstScores);
-            y += 120 + Gap;
+            y += 104 + Gap;
 
             // === System Analysis card ===
-            _pnlAnalysis = CreateCard(_pnlContent, Pad, y, ContentWidth, 170);
+            _pnlAnalysis = CreateCard(_pnlContent, Pad, y, ContentWidth, 140);
             _lblHealthTitle = new Label
             {
                 Text = "System Health Analysis",
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = TextPrimary,
-                Location = new Point(12, 8),
+                Location = new Point(12, 6),
                 AutoSize = true
             };
             _pnlAnalysis.Controls.Add(_lblHealthTitle);
@@ -248,7 +248,7 @@ namespace GorstakBenchmark
             _lblHealthStatus = new Label
             {
                 Text = "Run benchmark to analyze system health.",
-                Location = new Point(12, 28),
+                Location = new Point(12, 24),
                 AutoSize = true,
                 ForeColor = TextSecondary,
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold)
@@ -258,7 +258,7 @@ namespace GorstakBenchmark
             _lblHwInfo = new Label
             {
                 Text = "",
-                Location = new Point(12, 48),
+                Location = new Point(12, 42),
                 MaximumSize = new Size(496, 0),
                 AutoSize = true,
                 ForeColor = TextSecondary,
@@ -268,15 +268,15 @@ namespace GorstakBenchmark
 
             _lstIssues = new ListBox
             {
-                Location = new Point(12, 96),
-                Size = new Size(496, 66),
+                Location = new Point(12, 84),
+                Size = new Size(496, 50),
                 BackColor = CardBg,
                 ForeColor = TextPrimary,
                 BorderStyle = BorderStyle.None,
-                Font = new Font("Segoe UI", 8.5F)
+                Font = new Font("Segoe UI", 8F)
             };
             _pnlAnalysis.Controls.Add(_lstIssues);
-            y += 170 + Gap;
+            y += 140 + Gap;
 
             // === Screenshot button (bottom) ===
             var pnlScreenshot = CreateCard(_pnlContent, Pad, y, ContentWidth, 50);
