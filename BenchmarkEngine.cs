@@ -24,7 +24,7 @@ namespace GorstakBenchmark
             { "Memory", 2030000.0 },
             { "Disk", 3600.0 },
             { "GPU", 630000.0 },
-            { "Network", 545.0 }
+            { "Network", 115.0 }
         };
 
         public IProgress<string> Progress { get; set; }
@@ -336,9 +336,9 @@ namespace GorstakBenchmark
             else
                 avgLatency = 100;
 
-            double latencyScore = 1000.0 / (avgLatency + 1);
-            double speedMbps = 0;
+            double bestMbps = 0;
             string[] urls = {
+                "https://speed.cloudflare.com/__down?bytes=25000000",
                 "https://proof.ovh.net/files/10Mb.dat",
                 "http://speedtest.tele2.net/10MB.zip",
                 "http://ipv4.download.thinkbroadband.com/10MB.zip"
@@ -361,16 +361,26 @@ namespace GorstakBenchmark
                     }
                     sw.Stop();
                     long len = new FileInfo(path).Length;
-                    speedMbps = (len / (1024.0 * 1024) * 8) / sw.Elapsed.TotalSeconds;
+                    double thisMbps = (len / (1024.0 * 1024) * 8) / sw.Elapsed.TotalSeconds;
+                    if (thisMbps > bestMbps) bestMbps = thisMbps;
                     try { File.Delete(path); } catch { }
-                    break;
+                    // If we got a good speed, no need to try more servers
+                    if (bestMbps > 50) break;
                 }
                 catch { }
             }
 
-            r.NetworkScore = Math.Round((latencyScore + speedMbps) / 2, 2);
-            if (r.NetworkScore <= 0) r.NetworkScore = Math.Round(latencyScore, 2);
-            r.NetworkPercent = Math.Round((r.NetworkScore / ReferenceScores["Network"]) * 100, 1);
+            // Score = best download speed in Mbps
+            // Reference: a 1 Gbit line typically measures 500-700 Mbps single-thread from CDN.
+            // We use 600 Mbps as 100% reference.
+            r.NetworkScore = Math.Round(bestMbps, 2);
+            r.NetworkPercent = Math.Round((bestMbps / ReferenceScores["Network"]) * 100, 1);
+            // Latency bonus/penalty
+            if (avgLatency < 5) r.NetworkPercent += 5;
+            else if (avgLatency < 15) r.NetworkPercent += 2;
+            else if (avgLatency > 50) r.NetworkPercent -= 10;
+            else if (avgLatency > 30) r.NetworkPercent -= 5;
+            r.NetworkPercent = Math.Round(Math.Max(0, r.NetworkPercent), 1);
         }
 
         private void CalculateOverall(BenchmarkResults r)
