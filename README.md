@@ -1,6 +1,6 @@
-# Gorstak Benchmark v2
+# Gorstak Benchmark v0.4.0
 
-> .NET 8 WinForms system benchmark with integrated health analysis. Dark-themed GUI with pie charts, bottleneck detection, system event log scanning, and screenshot export.
+> .NET Framework 4.8 WinForms system benchmark with integrated health analysis. Dark-themed GUI with pie charts, bottleneck detection, system event log scanning, and screenshot export. 351 KB, no runtime install needed.
 
 ---
 
@@ -14,7 +14,7 @@ Comprehensive system performance testing with CPU, Memory, Disk, GPU, and Networ
 - **Memory Benchmark** — 10M element array + 100K random access
 - **Disk Benchmark** — 100 MB sequential R/W with WriteThrough (bypasses OS cache)
 - **GPU Benchmark** — 200×200 matrix multiplication + 100K trig operations
-- **Network Benchmark** — Latency (ping) + 10 MB download speed test
+- **Network Benchmark** — Latency (ping) + 10 MB download speed test (1 Gbit = 100%)
 - **Bottleneck Detection** — CPU vs GPU imbalance with severity rating
 - **System Health Analysis** — Scans event logs for:
   - WHEA hardware errors (memory/PCIe)
@@ -28,20 +28,15 @@ Comprehensive system performance testing with CPU, Memory, Disk, GPU, and Networ
 
 ## Build & Run
 
-Requires .NET 8 SDK.
+Requires Windows 10/11 with .NET Framework 4.8 (built-in).
 
 ```cmd
-dotnet build -c Release
-dotnet run -c Release
+build.bat
 ```
 
-Or publish as a single-file executable:
+Output: `releases\0.4.0\Benchmark.exe` (351 KB)
 
-```cmd
-dotnet publish -c Release
-```
-
-Output: `bin\Release\net8.0-windows\win-x64\publish\Benchmark.exe`
+Or just download from [Releases](https://github.com/CroatiaSecurity/Benchmark/releases).
 
 ---
 
@@ -55,7 +50,7 @@ Calibrated so a high-end system (Core Ultra 7 265KF / RTX 5070 / 32GB DDR5-7200 
 | Memory | 2,030,000 | 10M array ops + 100K random access |
 | Disk | 3,600 | 100 MB sequential R/W (MB/s avg) |
 | GPU | 630,000 | 200×200 matrix multiply + 100K trig |
-| Network | 27 | Latency + download speed composite |
+| Network | 545 | Latency + download speed (1 Gbit = 100%) |
 
 ---
 
@@ -68,7 +63,7 @@ Calibrated so a high-end system (Core Ultra 7 265KF / RTX 5070 / 32GB DDR5-7200 
 | `BenchmarkEngine.cs` | Async benchmark runner with WMI hardware detection |
 | `BenchmarkResults.cs` | Results model — scoring, bottleneck, HTML/JSON/text export |
 | `SystemAnalysis.cs` | Event log scanner — WHEA, GPU crashes, reboots, ACPI, health rating |
-| `Benchmark.csproj` | .NET 8 project file |
+| `build.bat` | Build script (csc.exe, .NET Framework 4.8) |
 
 ---
 
